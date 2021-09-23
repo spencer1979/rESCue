@@ -2,7 +2,7 @@
 
 #define LOG_TAG_BUZZER "Buzzer"
 
-MelodyPlayer player(BUZPIN, HIGH);
+MelodyPlayer player(BUZPIN, 0,LOW);
 
 Buzzer* Buzzer::instance = 0;
 

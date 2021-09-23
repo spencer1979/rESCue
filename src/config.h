@@ -18,7 +18,7 @@
 //#define LED_COB    // enables the light controller for tri-color COB-stripes
 
 #ifdef LED_WS28xx
- #define NUMPIXELS    16  // the number of LEDs if WS28xx is used
+ #define NUMPIXELS    32  // the number of LEDs if WS28xx is used
  #define LED_MODE_ODD_EVEN
  #define MAX_BRIGHTNESS       100 // max brightness of LEDs, allowed values 1-255
  #define MAX_BRIGHTNESS_BRAKE 255 // max brightness of LEDs for brake signal, allowed values 1-255
@@ -33,8 +33,8 @@
 /**** Definition of the battery parameter for battery monitor ****/
 
 // min and max battery voltage as int (voltage * 100)
-#define MAX_BATTARY_VOLTAGE      5040  // set your max. battery voltage here
-#define MIN_BATTARY_VOLTAGE      4000  // set your min. battery voltage here
+#define MAX_BATTARY_VOLTAGE      6720  // set your max. battery voltage here
+#define MIN_BATTARY_VOLTAGE      5333  // set your min. battery voltage here
 
 #define MAX_AVG_CURRENT          40.00
 
