@@ -7,26 +7,52 @@ CobController::CobController() = default;
 void CobController::init() {
     Logger::notice(LOG_TAG_COB, "initializing ...");
     ledcAttachPin(MOSFET_PIN_1, 0); // assign a led pins to a channel
-#ifdef DUAL_MOSFET
     ledcAttachPin(MOSFET_PIN_2, 1); // assign a led pins to a channel
-#endif
+    ledcAttachPin(MOSFET_PIN_3, 2); // assign a led pins to a channel
+
     // Initialize channels
     // channels 0-15, resolution 1-16 bits, freq limits depend on resolution
     // ledcSetup(uint8_t channel, uint32_t freq, uint8_t resolution_bits);
     ledcSetup(0, 4000, 8); // 12 kHz PWM, 8-bit resolution
-#ifdef DUAL_MOSFET
     ledcSetup(1, 4000, 8); // 12 kHz PWM, 8-bit resolution
-#endif
+    ledcSetup(2, 4000, 8); // 12 kHz PWM, 8-bit resolution
+}
+
+void CobController::loop(int* new_forward, int* new_backward, int* new_idle) {
+  this->update();
+   // is there a change detected
+  if(old_forward != *(new_forward) || old_backward != *(new_backward)) {
+    if(Logger::getLogLevel() == Logger::VERBOSE) {
+      char buf[128];
+      snprintf(buf, 128, "change detected: forward is %d was %d, backward is %d was %d",
+         *(new_forward), old_forward, *(new_backward), old_backward);
+      Logger::verbose(LOG_TAG_LED, buf);
+    }
+
+    this->changePattern(Pattern::FADE, (*new_forward) == HIGH, false);
+
+    old_forward = *(new_forward);
+    old_backward = *(new_backward);
+  }
+
+  //idle state???
+  if(old_idle != *(new_idle)) {
+    if(*(new_idle) == HIGH) {
+      this->idleSequence();
+    }
+    old_idle = *(new_idle);
+  }
 }
 
 void CobController::changePattern(Pattern pattern, boolean isForward, boolean repeatPattern) {
     //if (Logger::getLogLevel() == Logger::VERBOSE) {
     char buf[128];
     snprintf(buf, 128, "changePattern new pattern %d, forward %d, repeat %d", pattern, isForward, repeatPattern);
-    Logger::error(LOG_TAG_COB, buf);
+    Logger::notice(LOG_TAG_COB, buf);
     ///}
 
     if (activePattern == pattern && isForward == (direction == Direction::FORWARD)) {
+        Logger::notice(LOG_TAG_COB, "changePattern Forwording and pattern is the same, not change");
         return;
     }
     stopPattern = false;
@@ -34,7 +60,7 @@ void CobController::changePattern(Pattern pattern, boolean isForward, boolean re
     reverseOnComplete = false;
     activePattern = pattern;
     interval = 5;
-    totalSteps = MAX_BRIGHTNESS;
+    totalSteps = MAX_BRIGHTNESS_COB;
     if (isForward) {
         direction = Direction::FORWARD;
     } else {
@@ -72,6 +98,7 @@ void CobController::update() {
 
 // Increment the Index and reset at the end
 void CobController::increment() {
+    //Logger::notice(LOG_TAG_COB, "run increment");
     if (direction == FORWARD) {
         index++;
         if (index >= totalSteps) {
@@ -107,7 +134,7 @@ void CobController::onComplete() {
 
 // Reverse pattern direction
 void CobController::reverse() {
-    Serial.println("reverse: ");
+    //Serial.println("reverse: ");
     if (direction == FORWARD) {
         direction = REVERSE;
         index = totalSteps;
@@ -118,36 +145,34 @@ void CobController::reverse() {
 }
 
 void CobController::fade() {
-#ifdef DUAL_MOSFET
-    writePWM(0, index);
-    writePWM(1,totalSteps - index - 1);
-    Serial.print("direction ");
-    Serial.print(direction);
-    Serial.print(", val1: ");
-    Serial.print(index);
-    Serial.print(", val2: ");
-    Serial.println(totalSteps - index - 1);
-#else
-    writePWM(0, MAX_BRIGHTNESS);
-#endif
+    writePWM(0, MAX_BRIGHTNESS_COB);
+    //writePWM(0, index);
+    writePWM(1, totalSteps - index - 1);
+    writePWM(2, index);
 }
 
 void CobController::flash() {
     if (index % 2 == 0) {
         if (direction == FORWARD) {
-            writePWM(0, MAX_BRIGHTNESS_BRAKE); // set the brightness LED
+            writePWM(0, MAX_BRIGHTNESS_BRAKE_COB); // set the brightness LED
         } else {
-            writePWM(1, MAX_BRIGHTNESS_BRAKE); // set the brightness LED
+            if (index % 4 == 2) {
+                writePWM(1, MAX_BRIGHTNESS_BRAKE_COB); // set the brightness LED
+            } else {
+                writePWM(2, MAX_BRIGHTNESS_BRAKE_COB); // set the brightness LED
+            }
         }
     } else {
-        writePWM(0, 0); // turn off the front LED
-        writePWM(1, 0); // turn off the back LED
+        writePWM(0, 0); // turn off the white LED
+        writePWM(1, 0); // turn off the red LED
+        writePWM(2, 0); // turn off the green LED
     }
 }
 
 void CobController::stop() {
-    writePWM(0, 0); // turn off the front LED
-    writePWM(1, 0); // turn off the back LED  
+    //writePWM(0, 0); // turn off the white LED
+    //writePWM(1, 0); // turn off the red LED
+    //writePWM(2, 0); // turn off the green LED
 }
 
 void CobController::startSequence() {
@@ -157,7 +182,7 @@ void CobController::startSequence() {
 
 void CobController::idleSequence() {
     //changePattern(FADE, true, true);
-    //totalSteps = MAX_BRIGHTNESS / 2;
+    //totalSteps = MAX_BRIGHTNESS_COB / 2;
     //reverseOnComplete = true;
 }
 

@@ -10,6 +10,7 @@
 #include "CanBus.h"
 #include "AppConfiguration.h"
 #include "OTA.h"
+#include "CobController.h"
 
 int new_forward  = LOW;
 int new_backward = LOW;
@@ -22,6 +23,7 @@ int lastFake = 4000;
 HardwareSerial vesc(2);
 
 ILedController *ledController;
+CobController *cobController;
 OTAUpdater *updater = new OTAUpdater();
 
 #if defined(CANBUS_ENABLED)
@@ -67,7 +69,7 @@ void setup() {
   }
 
   ledController = LedControllerFactory::getInstance()->createLedController();
-
+  cobController = new CobController();
 
   pinMode(PIN_FORWARD, INPUT);
   pinMode(PIN_BACKWARD, INPUT);
@@ -90,9 +92,11 @@ void setup() {
 #endif
   // initialize the LED (either COB or Neopixel)
   ledController->init();
+  cobController->init();
 
   Buzzer::getInstance()->startSequence();
   ledController->startSequence();
+  cobController->startSequence();
 
   char buf[128];
   snprintf(buf, 128, " sw-version %d.%d.%d is happily running on hw-version %d.%d", 
@@ -129,11 +133,12 @@ void loop() {
   if(new_brake == HIGH) {
     // flash backlights
     ledController->changePattern(Pattern::RESCUE_FLASH_LIGHT, new_forward == HIGH, false);
+    cobController->changePattern(Pattern::RESCUE_FLASH_LIGHT, new_forward == HIGH, false);
   } 
 
   // call the led controller loop
-  ledController->loop(&new_forward, &new_backward, &idle);    
-
+  ledController->loop(&new_forward, &new_backward, &idle);
+  cobController->loop(&new_forward, &new_backward, &idle);
   // measure and check voltage
   batMonitor->checkValues();
 

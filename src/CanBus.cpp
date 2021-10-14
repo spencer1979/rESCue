@@ -85,6 +85,7 @@ void CanBus::loop() {
             initialized = true;
         }
         frameCount++;
+        Logger::notice(LOG_TAG_CANBUS, "*****CANBUS receive frame! type="+rx_frame.FIR.B.FF);
         //VESC only uses ext packages, so skip std packages
         if (rx_frame.FIR.B.FF == CAN_frame_ext) {
             if (Logger::getLogLevel() == Logger::VERBOSE) {
@@ -99,9 +100,9 @@ void CanBus::loop() {
             return;
         }
     }
-    if (Logger::getLogLevel() == Logger::VERBOSE) {
+    //if (Logger::getLogLevel() == Logger::VERBOSE) {
         dumpVescValues();
-    }
+    //}
 }
 
 void CanBus::requestFirmwareVersion() {
@@ -543,7 +544,7 @@ void CanBus::dumpVescValues() {
     bufferString += ", fault=";
     snprintf(val, size, "%d", vescData.fault);
     bufferString += val;
-    Logger::verbose(LOG_TAG_CANBUS, bufferString.c_str());
+    Logger::error(LOG_TAG_CANBUS, bufferString.c_str());
     lastDump = millis();
 }
 
@@ -592,6 +593,7 @@ std::string CanBus::readStringValueFromBuffer(int startbyte, int length, boolean
 }
 
 void CanBus::sendCanFrame(const CAN_frame_t *p_frame) {
+    char buf1[64];
     if (Logger::getLogLevel() == Logger::VERBOSE) {
         char buf[64];
         snprintf(buf, 64, "Sending CAN frame %" PRIu32 ", [%d, %d, %d, %d, %d, %d, %d, %d]\n",
@@ -606,9 +608,12 @@ void CanBus::sendCanFrame(const CAN_frame_t *p_frame) {
                  p_frame->data.u8[7]);
         Logger::verbose(LOG_TAG_CANBUS, buf);
     }
-    xSemaphoreTake(mutex_v, portMAX_DELAY);
-    ESP32Can.CANWriteFrame(p_frame);
-    xSemaphoreGive(mutex_v);
+    //xSemaphoreTake(mutex_v, portMAX_DELAY);
+    //ESP32Can.CANWriteFrame(p_frame);
+    //xSemaphoreGive(mutex_v);
+
+    sprintf(buf1, "finish sending CAN frame");
+    Logger::verbose(LOG_TAG_CANBUS, buf1);
 }
 
 #endif //CANBUS_ENABLED

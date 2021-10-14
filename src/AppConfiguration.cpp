@@ -1,5 +1,6 @@
 #include "AppConfiguration.h"
 #include "config.h"
+#include "RTTTL.h"
 
 AppConfiguration* AppConfiguration::instance = 0;
 
@@ -17,11 +18,11 @@ void AppConfiguration::readPreferences() {
     deserializeJson(doc, json);
     Logger::verbose(LOG_TAG_APPCONFIGURATION, "readPreferences: ");
     Serial.println("readPreferences: " + json);
-    config.otaUpdateActive = doc["otaUpdateActive"] | true;
+    config.otaUpdateActive = doc["otaUpdateActive"] | false;
     config.isNotificationEnabled = doc["isNotificationEnabled"] | false;
-    config.minBatteryVoltage = doc["minBatteryVoltage"] | 40.0;
-    config.maxBatteryVoltage = doc["maxBatteryVoltage"] | 50.4;
-    config.startSoundIndex = doc["startSoundIndex"] | 107;
+    config.minBatteryVoltage = doc["minBatteryVoltage"] | MIN_BATTARY_VOLTAGE;
+    config.maxBatteryVoltage = doc["maxBatteryVoltage"] | MAX_BATTARY_VOLTAGE;
+    config.startSoundIndex = doc["startSoundIndex"] | (int)RTTTL_MELODIES::NO_TONE;
     config.startLightIndex = doc["startLightIndex"] | 1;
     config.batteryWarningSoundIndex = doc["batteryWarningSoundIndex"] | 406;
     config.batteryAlarmSoundIndex = doc["batteryAlarmSoundIndex"] | 402;
@@ -44,7 +45,7 @@ void AppConfiguration::readPreferences() {
     config.lightColorSecondaryRed = (config.lightColorSecondary >> 16) & 0x0ff;
     config.lightColorSecondaryGreen = (config.lightColorSecondary >> 8) & 0x0ff;
     config.lightColorSecondaryBlue = config.lightColorSecondary & 0x0ff;
-    config.logLevel = doc["logLevel"] | Logger::WARNING;
+    config.logLevel = doc["logLevel"] | Logger::NOTICE;
     preferences.end();
 }
 

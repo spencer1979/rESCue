@@ -15,32 +15,32 @@
 
 // Choose either WS28xx compatible stripe or COB-LED stripe
 #define LED_WS28xx // enables the light controller for WS28xx (Neopixel)
-//#define LED_COB    // enables the light controller for tri-color COB-stripes
+#define LED_COB    // enables the light controller for tri-color COB-stripes
 
 #ifdef LED_WS28xx
- #define NUMPIXELS    32  // the number of LEDs if WS28xx is used
+ #define NUMPIXELS    16  // the number of LEDs if WS28xx is used
  #define LED_MODE_ODD_EVEN
  #define MAX_BRIGHTNESS       100 // max brightness of LEDs, allowed values 1-255
  #define MAX_BRIGHTNESS_BRAKE 255 // max brightness of LEDs for brake signal, allowed values 1-255
 #endif //LED_WS28xx
 #ifdef LED_COB
- #define MAX_BRIGHTNESS       230 // max brightness of LEDs, allowed values 1-255
- #define MAX_BRIGHTNESS_BRAKE 255 // max brightness of LEDs for brake signal, allowed values 1-255
- #define NUMPIXELS    0  // We don't have single pi
- #define DUAL_MOSFET     // uncomment if you use two MOSFET to activate color switching
+ #define MAX_BRIGHTNESS_COB       50 // max brightness of LEDs, allowed values 1-255
+ #define MAX_BRIGHTNESS_BRAKE_COB 150 // max brightness of LEDs for brake signal, allowed values 1-255
+ //#define NUMPIXELS_COB    0  // We don't have single pi
+ //#define DUAL_MOSFET     // uncomment if you use two MOSFET to activate color switching
 #endif //LED_COB
 
 /**** Definition of the battery parameter for battery monitor ****/
 
 // min and max battery voltage as int (voltage * 100)
-#define MAX_BATTARY_VOLTAGE      6720  // set your max. battery voltage here
-#define MIN_BATTARY_VOLTAGE      5333  // set your min. battery voltage here
+#define MAX_BATTARY_VOLTAGE      5040  // set your max. battery voltage here
+#define MIN_BATTARY_VOLTAGE      4000  // set your min. battery voltage here
 
 #define MAX_AVG_CURRENT          40.00
 
 // optional WS28xx lightbar & battery-monitor params
 #define LIGHT_BAR_ENABLED            // activates a visual WS28xx battery bar, if connected
-#define LIGHT_BAR_NUMPIXELS    5     // the number of LEDS of the battery bar
+#define LIGHT_BAR_NUMPIXELS    10     // the number of LEDS of the battery bar
 
 #define LIGHT_BAR_ADC_ENABLED        // Enables the lightbar support for ADC-Footpad
 
@@ -56,17 +56,17 @@
 #define BLYNK_ENABLED
 
 #ifdef CANBUS_ENABLED
- #define VESC_CAN_ID 25 //VESC-ID as configured in VESC as decimal
+ #define VESC_CAN_ID 81 //VESC-ID as configured in VESC as decimal
  #define CANBUS_ONLY
 #endif //CANBUS_ENABLED
 
 #ifdef BLYNK_ENABLED
   // Blynk token for BLE
   //#define BLYNK_AUTH_TOKEN "l7b1ongYuGiRcnDHufxwnazMH6hAn3Xl"
-  #define BLYNK_AUTH_TOKEN "bb48a7193d764ea7a90dbffb54ffcb76"
+  #define BLYNK_AUTH_TOKEN "0ghgdZaqiGAFIgT7oa5Sv9qExORKULEB"
 #endif
 
-////#define FAKE_VESC_ENABLED
+#define FAKE_VESC_ENABLED
 
 #endif //__CONFIG_H__
 

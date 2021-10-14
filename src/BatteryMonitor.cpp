@@ -41,20 +41,21 @@ void BatteryMonitor::init() {
 
 // Read the voltage from the voltage divider and update the battery bar if connected
 float BatteryMonitor::readValues() {
-#ifndef CANBUS_ENABLED
+//#ifndef CANBUS_ENABLED
     int adc = smoothAnalogReading();  // read the sensor and smooth the value
     float sensorValue = ( adc * 3.3 ) / (4096);  // calculate the voltage at the ESP32 GPIO
     float voltage = sensorValue *  VOLTAGE_DIVIDER_CONSTANT;  // calculate the battery voltage
-#else
-    float voltage = vescData->inputVoltage; 
-    float current = abs(vescData->current);
-    updateCurrentArray(current);
-#endif //CANBUS_ENABLED
+//#else
+//    float voltage = vescData->inputVoltage; 
+//    float current = abs(vescData->current);
+//    updateCurrentArray(current);
+//#endif //CANBUS_ENABLED
 
 #ifdef LIGHT_BAR_ENABLED
-    LightBarController::getInstance()->updateLightBar(
+    /*LightBarController::getInstance()->updateLightBar(
             voltage,mapSwitchState(vescData->switchState, vescData->adc1 > vescData->adc2),
-            vescData->erpm);  // update the WS28xx battery bar
+            vescData->erpm);  // update the WS28xx battery bar*/
+      LightBarController::getInstance()->updateLightBarNew(voltage);
 #endif
   if(Logger::getLogLevel() == Logger::VERBOSE) {
 #ifndef CANBUS_ENABLED
@@ -76,17 +77,17 @@ void BatteryMonitor::checkValues() {
 
     int voltage = readValues() * 100;
     // check if voltage is below absolute minimum or above absolute maximum (regen)
-    if(voltage < min_voltage || voltage > max_voltage) {
-      Logger::warning(LOG_TAG_BATMON, "ALARM: Battery voltage out of range");
-      Buzzer::getInstance()->alarm();  // play an anoying alarm tone
-      return;
-    } 
+    //if(voltage < min_voltage || voltage > max_voltage) {
+    //  Logger::warning(LOG_TAG_BATMON, "ALARM: Battery voltage out of range");
+    //  Buzzer::getInstance()->alarm();  // play an anoying alarm tone
+    //  return;
+    //} 
 
     // check if the voltage is close to the minimum
     if(voltage < warn_voltage) {
         if(millis() - lastBatWarn > 5000) {
           Logger::warning(LOG_TAG_BATMON, "WARN: Battery voltage out of range");
-          Buzzer::getInstance()->warning(); // play a warn tonen every 5 seconds
+          //Buzzer::getInstance()->warning(); // play a warn tonen every 5 seconds
           lastBatWarn = millis();
         }
     }
@@ -95,7 +96,7 @@ void BatteryMonitor::checkValues() {
     if(getAverageCurrent() > max_current) {
         if(millis() - lastCurWarn > 5000) {
           Logger::warning(LOG_TAG_BATMON, "WARN: Average current too high");
-          Buzzer::getInstance()->warning(); // play a warn tonen every 5 seconds
+          //Buzzer::getInstance()->warning(); // play a warn tonen every 5 seconds
           lastCurWarn = millis();
         }
     }

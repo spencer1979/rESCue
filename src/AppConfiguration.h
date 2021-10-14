@@ -9,9 +9,9 @@
 #define LOG_TAG_APPCONFIGURATION "AppConfiguration"
 
 struct Config {
-  boolean otaUpdateActive = true;
+  boolean otaUpdateActive = false;
   boolean isNotificationEnabled = false;
-  double minBatteryVoltage = 41.0;
+  double minBatteryVoltage = MIN_BATTARY_VOLTAGE;
   double maxBatteryVoltage = MAX_BATTARY_VOLTAGE;
   int startSoundIndex = 0;
   int startLightIndex = 0;
@@ -31,11 +31,11 @@ struct Config {
   int lightColorSecondaryBlue = 0;
   boolean brakeLightEnabled = true;
   int brakeLightMinAmp = 4;
-  int numberPixelLight = 32;
-  int numberPixelBatMon = 5;
-  int vescId = 25;
+  int numberPixelLight = NUMPIXELS;
+  int numberPixelBatMon = LIGHT_BAR_NUMPIXELS;
+  int vescId = VESC_CAN_ID;
   String authToken;
-  Logger::Level logLevel = Logger::WARNING;
+  Logger::Level logLevel = Logger::NOTICE;
 };
 
 class AppConfiguration {

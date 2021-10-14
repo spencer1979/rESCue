@@ -23,6 +23,7 @@ class LightBarController {
     public:
         static LightBarController* getInstance();
         void updateLightBar(float voltage, AdcState adcState, double erpm);
+        void updateLightBarNew(float voltage);
 
     private:
         LightBarController() {}

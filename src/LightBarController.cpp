@@ -25,6 +25,40 @@ LightBarController *LightBarController::getInstance() {
 }
 
 // updates the light bar, depending on the LED count
+void LightBarController::updateLightBarNew(float voltage) {
+    int used = max_voltage - voltage * 100; // calculate how much the voltage has dropped
+    int value = voltage_range - used; // calculate the remaining value to lowest voltage
+    float diffPerPixel =
+            voltage_range / 100.0 / pixel_count; // calculate how much voltage a single pixel shall represent
+    float count = value / 100.0 / diffPerPixel; // calculate how many pixels must shine
+    
+    int whole = count; // number of "full" green pixels
+    int remainder = (count - whole) * 100; // percentage of usage of current pixel
+    for (int i = 0; i < pixel_count; i++) {
+            lightPixels.setPixelColor(i, 0, 0, 0);
+            lightPixels.setPixelColor(i, 0, 0, 153); // full blue
+            if (i == whole) {
+                // the last pixel, the battery voltage somewhere in the range of this pixel
+                // the lower the remaining value the more the pixel goes from green to red
+                int val = calcVal(remainder);
+                lightPixels.setPixelColor(i, MAX_BRIGHTNESS - val, val, 0);
+            }
+            if (i > whole) {
+                // these pixels must be turned off, we already reached a lower battery voltage
+                lightPixels.setPixelColor(i, 0, 0, 0);
+            }
+            if (i < whole) {
+                // turn on this pixel completely green, the battery voltage is still above this value
+                lightPixels.setPixelColor(i, 0, MAX_BRIGHTNESS, 0);
+            }
+            if (value < 0) {
+                // ohhh, we already hit the absolute minimum, set all pixel to full red.
+                lightPixels.setPixelColor(i, MAX_BRIGHTNESS, 0, 0);
+            }
+    }
+    lightPixels.show();
+}
+// updates the light bar, depending on the LED count
 void LightBarController::updateLightBar(float voltage, AdcState adcState, double erpm) {
     /*
     if(abs(erpm) > 10000) {
