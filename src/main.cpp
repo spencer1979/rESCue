@@ -133,7 +133,7 @@ void loop() {
   if(new_brake == HIGH) {
     // flash backlights
     ledController->changePattern(Pattern::RESCUE_FLASH_LIGHT, new_forward == HIGH, false);
-    cobController->changePattern(Pattern::RESCUE_FLASH_LIGHT, new_forward == HIGH, false);
+    cobController->changePattern(Pattern::FADE, new_forward == HIGH, false);
   } 
 
   // call the led controller loop

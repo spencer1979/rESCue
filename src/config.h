@@ -24,7 +24,7 @@
  #define MAX_BRIGHTNESS_BRAKE 255 // max brightness of LEDs for brake signal, allowed values 1-255
 #endif //LED_WS28xx
 #ifdef LED_COB
- #define MAX_BRIGHTNESS_COB       50 // max brightness of LEDs, allowed values 1-255
+ #define MAX_BRIGHTNESS_COB       150 // max brightness of LEDs, allowed values 1-255
  #define MAX_BRIGHTNESS_BRAKE_COB 150 // max brightness of LEDs for brake signal, allowed values 1-255
  //#define NUMPIXELS_COB    0  // We don't have single pi
  //#define DUAL_MOSFET     // uncomment if you use two MOSFET to activate color switching
@@ -66,7 +66,7 @@
   #define BLYNK_AUTH_TOKEN "0ghgdZaqiGAFIgT7oa5Sv9qExORKULEB"
 #endif
 
-#define FAKE_VESC_ENABLED
+//#define FAKE_VESC_ENABLED
 
 #endif //__CONFIG_H__
 

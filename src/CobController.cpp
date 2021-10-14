@@ -57,9 +57,9 @@ void CobController::changePattern(Pattern pattern, boolean isForward, boolean re
     }
     stopPattern = false;
     repeat = repeatPattern;
-    reverseOnComplete = false;
+    reverseOnComplete = true;
     activePattern = pattern;
-    interval = 5;
+    interval = 10;
     totalSteps = MAX_BRIGHTNESS_COB;
     if (isForward) {
         direction = Direction::FORWARD;
@@ -145,9 +145,9 @@ void CobController::reverse() {
 }
 
 void CobController::fade() {
-    writePWM(0, MAX_BRIGHTNESS_COB);
+    writePWM(0, totalSteps - index);
     //writePWM(0, index);
-    writePWM(1, totalSteps - index - 1);
+    writePWM(1, 0);
     writePWM(2, index);
 }
 
