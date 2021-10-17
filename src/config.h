@@ -44,7 +44,7 @@
 
 #define LIGHT_BAR_ADC_ENABLED        // Enables the lightbar support for ADC-Footpad
 
-#define VOLTAGE_DIVIDER_CONSTANT 24.527 // for calculation see at bottom
+#define VOLTAGE_DIVIDER_CONSTANT 230.12 // for calculation see at bottom
 
 /**** Definition of the UART connection to the Cheap Focer 2 ****/
 
