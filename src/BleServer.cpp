@@ -203,14 +203,19 @@ void BleServer::onDisconnect(NimBLEServer* pServer) {
   NimBLEDevice::startAdvertising();
 }
 
+#ifdef CANBUS_ENABLED
 void BleServer::init(Stream *vesc, CanBus *canbus) {
+#else
+void BleServer::init(Stream *vesc) {
+#endif
   vescSerial = vesc;
    
   // Create the BLE Device
   NimBLEDevice::init(BT_NAME);
 
+#ifdef CANBUS_ENABLED
   this->canbus = canbus;
-
+#endif
   // Create the BLE Server
   pServer = NimBLEDevice::createServer();
   pServer->setCallbacks(this);

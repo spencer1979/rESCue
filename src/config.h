@@ -27,7 +27,6 @@
  #define MAX_BRIGHTNESS_COB       150 // max brightness of LEDs, allowed values 1-255
  #define MAX_BRIGHTNESS_BRAKE_COB 150 // max brightness of LEDs for brake signal, allowed values 1-255
  //#define NUMPIXELS_COB    0  // We don't have single pi
- //#define DUAL_MOSFET     // uncomment if you use two MOSFET to activate color switching
 #endif //LED_COB
 
 /**** Definition of the battery parameter for battery monitor ****/
@@ -44,7 +43,8 @@
 
 #define LIGHT_BAR_ADC_ENABLED        // Enables the lightbar support for ADC-Footpad
 
-#define VOLTAGE_DIVIDER_CONSTANT 230.12 // for calculation see at bottom
+#define VOLTAGE_DIVIDER_CONSTANT 215.26 // for calculation see at bottom
+// ADC=286 when real voltage=49.6V
 
 /**** Definition of the UART connection to the Cheap Focer 2 ****/
 
@@ -52,7 +52,7 @@
 
 // The name this controller should advertise for BLE
 #define BT_NAME "rESCue"
-#define CANBUS_ENABLED
+//#define CANBUS_ENABLED
 #define BLYNK_ENABLED
 
 #ifdef CANBUS_ENABLED

@@ -115,11 +115,9 @@ void CobController::increment() {
 }
 
 void CobController::onComplete() {
-    Serial.print("onComplete: ");
-    Serial.print("reverseOnComplete  ");
-    Serial.print(reverseOnComplete);
-    Serial.print(", repeat ");
-    Serial.println(repeat);
+    char buf[128];
+    snprintf(buf, 128, "onComplete, reverseOnComplete %d, repeat %d", reverseOnComplete, repeat);
+    Logger::verbose(LOG_TAG_COB, buf);
     stopPattern = true;
     if (reverseOnComplete) {
         reverse();
@@ -177,7 +175,7 @@ void CobController::stop() {
 
 void CobController::startSequence() {
     Logger::notice(LOG_TAG_COB, "run startSequence");
-    //changePattern(RESCUE_FLASH_LIGHT, true, true);
+    changePattern(FADE, true, true);
 }
 
 void CobController::idleSequence() {

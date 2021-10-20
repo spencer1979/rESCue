@@ -100,9 +100,9 @@ void CanBus::loop() {
             return;
         }
     }
-    //if (Logger::getLogLevel() == Logger::VERBOSE) {
+    if (Logger::getLogLevel() == Logger::VERBOSE) {
         dumpVescValues();
-    //}
+    }
 }
 
 void CanBus::requestFirmwareVersion() {
@@ -544,7 +544,7 @@ void CanBus::dumpVescValues() {
     bufferString += ", fault=";
     snprintf(val, size, "%d", vescData.fault);
     bufferString += val;
-    Logger::error(LOG_TAG_CANBUS, bufferString.c_str());
+    Logger::verbose(LOG_TAG_CANBUS, bufferString.c_str());
     lastDump = millis();
 }
 
@@ -608,9 +608,9 @@ void CanBus::sendCanFrame(const CAN_frame_t *p_frame) {
                  p_frame->data.u8[7]);
         Logger::verbose(LOG_TAG_CANBUS, buf);
     }
-    //xSemaphoreTake(mutex_v, portMAX_DELAY);
-    //ESP32Can.CANWriteFrame(p_frame);
-    //xSemaphoreGive(mutex_v);
+    xSemaphoreTake(mutex_v, portMAX_DELAY);
+    ESP32Can.CANWriteFrame(p_frame);
+    xSemaphoreGive(mutex_v);
 
     sprintf(buf1, "finish sending CAN frame");
     Logger::verbose(LOG_TAG_CANBUS, buf1);

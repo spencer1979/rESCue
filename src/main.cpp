@@ -38,6 +38,8 @@ BleServer *bleServer = new BleServer();
 // Declare the local logger function before it is called.
 void localLogger(Logger::Level level, const char* module, const char* message);
 
+#ifdef CANBUS_ENABLED
+#ifdef FAKE_VESC_ENABLED
 void fakeCanbusValues() {
     if(millis() - lastFake > 3000) {
         canbus->vescData.inputVoltage = random(43, 50);
@@ -53,6 +55,8 @@ void fakeCanbusValues() {
         lastFake = millis();
     }
 }
+#endif
+#endif
 
 void setup() {
   Logger::setOutputFunction(localLogger);
@@ -88,7 +92,11 @@ void setup() {
 #ifdef CANBUS_ONLY
   bleServer->init(canbus->stream, canbus);
 #else
+#ifdef CANBUS_ENABLED
   bleServer->init(&vesc, canbus);
+#else
+  bleServer->init(&vesc);
+#endif
 #endif
   // initialize the LED (either COB or Neopixel)
   ledController->init();
@@ -122,7 +130,7 @@ void loop() {
   new_forward  = digitalRead(PIN_FORWARD);
   new_backward = digitalRead(PIN_BACKWARD);
   new_brake    = digitalRead(PIN_BRAKE);
-  idle         = *(new_forward) == LOW && *(new_backward) == LOW;
+  idle         = new_forward == LOW && new_backward == LOW;
 #endif
 
 #ifdef CANBUS_ENABLED

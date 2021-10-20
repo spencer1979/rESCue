@@ -141,9 +141,11 @@ void OTACallback::onWrite(BLECharacteristic *pCharacteristic) {
       if(key == "numberPixelBatMon") {
         AppConfiguration::getInstance()->config.numberPixelBatMon = atoi(value.c_str());
       }
+      #ifdef CANBUS_ENABLED
       if(key == "vescId") {
         AppConfiguration::getInstance()->config.vescId = atoi(value.c_str());
-      } 
+      }
+      #endif
       if(key == "authToken") {
         AppConfiguration::getInstance()->config.authToken = value.c_str();
       }

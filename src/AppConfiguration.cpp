@@ -35,7 +35,9 @@ void AppConfiguration::readPreferences() {
     config.brakeLightEnabled = doc["brakeLightEnabled"] | true;
     config.brakeLightMinAmp = doc["brakeLightMinAmp"] | 4;
     config.authToken = doc["authToken"] | BLYNK_AUTH_TOKEN;
+#ifdef CANBUS_ENABLED
     config.vescId = doc["vescId"] | VESC_CAN_ID;
+#endif
     config.numberPixelLight = doc["numberPixelLight"] | NUMPIXELS;
     config.numberPixelBatMon = doc["numberPixelBatMon"] | LIGHT_BAR_NUMPIXELS;
     // calculate RGB values for primary and secondary color
@@ -45,7 +47,7 @@ void AppConfiguration::readPreferences() {
     config.lightColorSecondaryRed = (config.lightColorSecondary >> 16) & 0x0ff;
     config.lightColorSecondaryGreen = (config.lightColorSecondary >> 8) & 0x0ff;
     config.lightColorSecondaryBlue = config.lightColorSecondary & 0x0ff;
-    config.logLevel = doc["logLevel"] | Logger::NOTICE;
+    config.logLevel = doc["logLevel"] | Logger::VERBOSE;
     preferences.end();
 }
 
@@ -69,7 +71,9 @@ void AppConfiguration::savePreferences() {
     doc["brakeLightEnabled"] = config.brakeLightEnabled;
     doc["brakeLightMinAmp"] = config.brakeLightMinAmp;
     doc["authToken"] = config.authToken;
+#ifdef CANBUS_ENABLED
     doc["vescId"] = config.vescId;
+#endif
     doc["numberPixelLight"] = config.numberPixelLight;
     doc["numberPixelBatMon"] = config.numberPixelBatMon;
     doc["logLevel"] = config.logLevel;

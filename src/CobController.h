@@ -41,7 +41,7 @@ class CobController : public ILedController {
       boolean stopPattern       = false; // is pattern stopped
       boolean repeat            = true; // repeat the pattern infinitly
       boolean reverseOnComplete = true; // reverse the pattern onComplete
-      Pattern activePattern     = FADE;
+      Pattern activePattern     = NONE;
       Direction direction       = FORWARD;
       uint16_t totalSteps       = 0;     // total number of steps in the pattern
       uint16_t index            = 0;     // current step within the pattern

@@ -33,7 +33,9 @@ struct Config {
   int brakeLightMinAmp = 4;
   int numberPixelLight = NUMPIXELS;
   int numberPixelBatMon = LIGHT_BAR_NUMPIXELS;
+#ifdef CANBUS_ENABLED
   int vescId = VESC_CAN_ID;
+#endif
   String authToken;
   Logger::Level logLevel = Logger::NOTICE;
 };
