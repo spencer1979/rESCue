@@ -54,6 +54,8 @@
 #define BT_NAME "rESCue"
 //#define CANBUS_ENABLED
 #define BLYNK_ENABLED
+// ENABLE_BLE_SPEAKER
+#define ENABLE_BLE_SPEAKER
 
 #ifdef CANBUS_ENABLED
  #define VESC_CAN_ID 81 //VESC-ID as configured in VESC as decimal
